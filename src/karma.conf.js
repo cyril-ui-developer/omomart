@@ -20,6 +20,23 @@ module.exports = function (config) {
       reports: ['html', 'lcovonly', 'text-summary'],
       fixWebpackSourcePaths: true
     },
+    browsers: ['Chrome', 'ChromiumHeadless', 'ChromiumNoSandbox'],
+  customLaunchers: {
+  ChromiumHeadless: {
+        base: 'Chrome',
+        flags: [
+          '--headless',
+          '--disable-gpu',
+          // Without a remote debugging port, Google Chrome exits immediately.
+          '--remote-debugging-port=9222',
+        ],
+        debug: true,
+      },
+      ChromiumNoSandbox: {
+        base: 'ChromiumHeadless',
+        flags: ['--no-sandbox', '--disable-translate', '--disable-extensions']
+      }
+    },
     reporters: ['progress', 'kjhtml'],
     port: 9876,
     colors: true,

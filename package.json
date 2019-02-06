@@ -28,7 +28,7 @@
     "build:ci": "docker build -f Dockerfile.integration . -t $npm_package_config_imageRepo:latest"
   },
   "config": {
-    "imageRepo": "duluca/omomart",
+    "imageRepo": "julyseven2002/omomart",
     "imageName": "omomart",
     "imagePort": "8080"
   },

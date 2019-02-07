@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 
-import { sign } from 'fake-jwt-sign' // For fakeAuthProvider only
+import { sign } from 'fake-jwt-sign'; // For fakeAuthProvider only
 import * as decode from 'jwt-decode';
 
 import { BehaviorSubject, Observable, of, throwError as observableThrowError } from 'rxjs';
@@ -10,9 +10,10 @@ import { catchError, map } from 'rxjs/operators';
 
 import { environment } from '../../environments/environment';
 import { Role } from './role.enum';
-import { transformError } from '../common/common'
+import { transformError } from '../common/common';
+import { CacheService } from './cache.service';
 
-export interface IAuthStatus {
+export interface IAuthStatus  {
   isAuthenticated: boolean;
   userRole: Role;
   userId: string;
@@ -22,24 +23,30 @@ interface IServerAuthResponse {
   accessToken: string;
 }
 
-const defaultAuthStatus = { isAuthenticated: false, userRole: Role.None, userId: null }
+const defaultAuthStatus = { isAuthenticated: false, userRole: Role.None, userId: null };
 
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService {
+export class AuthService extends CacheService  {
+
+
+
   private readonly authProvider: (
     email: string,
     password: string
   ) => Observable<IServerAuthResponse>;
 
-  authStatus = new BehaviorSubject<IAuthStatus>(defaultAuthStatus);
-
+  authStatus = new BehaviorSubject<IAuthStatus>(
+    this.getItem('authStatus') || defaultAuthStatus
+  );
   constructor(private httpClient: HttpClient) {
+    super();
      // Fake login function to simulate roles
     this.authProvider = this.fakeAuthProvider;
     // Example of a real login call to server-side
     // this.authProvider = this.exampleAuthProvider
+    this.authStatus.subscribe(authStatus => this.setItem('authStatus', authStatus));
   }
 
   private fakeAuthProvider(
@@ -47,7 +54,7 @@ export class AuthService {
     password: string
   ): Observable<IServerAuthResponse> {
     if (!email.toLowerCase().endsWith('@test.com')) {
-      return observableThrowError('Failed to login! Email needs to end with @test.com.')
+      return observableThrowError('Failed to login! Email needs to end with @test.com.');
     }
 
     const authStatus = {
@@ -70,14 +77,14 @@ export class AuthService {
     return of(authResponse);
   }
   login(email: string, password: string): Observable<IAuthStatus> {
-    this.logout()
+    this.logout();
 
     const loginResponse = this.authProvider(email, password).pipe(
       map(value => {
         return decode(value.accessToken) as IAuthStatus;
       }),
       catchError(transformError)
-    )
+    );
 
     loginResponse.subscribe(
       res => {
@@ -87,12 +94,30 @@ export class AuthService {
         this.logout();
         return observableThrowError(err);
       }
-    )
+    );
 
     return loginResponse;
   }
 
   logout() {
+    this.clearToken();
     this.authStatus.next(defaultAuthStatus);
+
+  }
+
+  private setToken(jwt: string) {
+    this.setItem('jwt', jwt);
+  }
+
+  private getDecodedToken(): IAuthStatus {
+    return decode(this.getItem('jwt'));
+  }
+
+  getToken(): string {
+    return this.getItem('jwt') || '';
+  }
+
+  private clearToken() {
+    this.removeItem('jwt');
   }
 }

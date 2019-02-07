@@ -1,9 +1,8 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing'
-import { MediaChange } from '@angular/flex-layout'
-import { FormsModule, ReactiveFormsModule } from '@angular/forms'
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { MediaChange } from '@angular/flex-layout';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SafeResourceUrl, SafeValue } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-// tslint:disable-next-line:max-line-length
 import { SecurityContext } from '@angular/platform-browser/src/security/dom_sanitization_service';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Observable, Subscription, of } from 'rxjs';
@@ -33,23 +32,22 @@ export class ObservableMediaFake {
 export class MatIconRegistryFake {
   _document = document;
   addSvgIcon(iconName: string, url: SafeResourceUrl): this {
-    // this.addSvgIcon('lemon', 'lemon.svg')
     return this;
   }
 
   getNamedSvgIcon(name: string, namespace: string = ''): Observable<SVGElement> {
-    return of(this._svgElementFromString(FAKE_SVGS.lemon))
+    return of(this._svgElementFromString(FAKE_SVGS.lemon));
   }
 
   private _svgElementFromString(str: string): SVGElement {
     if (this._document || typeof document !== 'undefined') {
       const div = (this._document || document).createElement('DIV');
-      div.innerHTML = str
+      div.innerHTML = str;
       const svg = div.querySelector('svg') as SVGElement;
       if (!svg) {
         throw Error('<svg> tag not found');
       }
-      return svg
+      return svg;
     }
   }
 }
@@ -65,7 +63,7 @@ export class DomSanitizerFake {
 
 export const commonTestingProviders: any[] = [
   // intentionally left blank
-]
+];
 
 export const commonTestingModules: any[] = [
   FormsModule,

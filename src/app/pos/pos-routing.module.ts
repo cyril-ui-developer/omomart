@@ -1,9 +1,16 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { PosComponent } from './pos/pos.component';
+import { AuthGuard } from '../auth/auth-guard.service';
+import { Role } from '../auth/role.enum';
 
 const routes: Routes = [
-  { path: '', component: PosComponent }
+  { path: '', component: PosComponent,
+  canActivate: [AuthGuard],
+  data: {
+    expectedRole: Role.Cashier,
+  }
+}
 ];
 
 @NgModule({

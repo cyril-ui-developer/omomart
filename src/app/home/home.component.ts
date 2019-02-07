@@ -21,8 +21,12 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     this.authService.authStatus.subscribe(
-      authStatus => (this._displayLogin = !authStatus.isAuthenticated)
+      authStatus => {
+        this._displayLogin = !authStatus.isAuthenticated;
+      }
+
     );
+
   }
 
   get displayLogin() {

@@ -11,6 +11,7 @@ import {
   DomSanitizerFake,
   ObservableMediaFake,
 } from './common/common.testing';
+import { NavigationMenuComponent } from './navigation-menu/navigation-menu.component';
 
 
 describe('AppComponent', () => {
@@ -23,7 +24,7 @@ describe('AppComponent', () => {
         { provide: DomSanitizer, useClass: DomSanitizerFake },
       ]),
       declarations: [
-        AppComponent
+        AppComponent, NavigationMenuComponent
       ],
     }).compileComponents();
   }));

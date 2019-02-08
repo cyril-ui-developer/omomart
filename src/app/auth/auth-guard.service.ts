@@ -52,7 +52,7 @@ export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
     if (route) {
       const expectedRole = route.data.expectedRole;
 
-      if (expectedRole) {
+      if (expectedRole ) {
         roleMatch = this.currentAuthStatus.userRole === expectedRole;
       }
 

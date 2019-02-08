@@ -9,6 +9,7 @@ const routes: Routes = [
   canActivate: [AuthGuard],
   data: {
     expectedRole: Role.Cashier,
+    expectedRole2: Role.Manager,
   }
 }
 ];
